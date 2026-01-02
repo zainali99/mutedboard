@@ -1,0 +1,90 @@
+/* CSS Reset */
+
+/* add css vars like primary colors */
+:root {
+    --primary-color: #27651A;
+    --primary-hover: #7CB342;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --text-color: #212529;
+    --border-color: #dee2e6;
+    --bg-color: #ffffff;
+}
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    line-height: 1.9em;
+    font: 12px Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+
+input, button, textarea, select {
+    font: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+    margin: 0.5rem 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+.container {
+    width: 960px;
+    margin: 0 auto;
+}
+footer {
+
+    text-align: center;
+    margin-top: 20px;
+}
+footer p {
+    color: #6c757d;
+   
+}
+
+
+
+.btn {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 4px 8px;
+
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}

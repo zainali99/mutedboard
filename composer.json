@@ -1,0 +1,20 @@
+{
+    "name": "mutedboard/framework",
+    "description": "Custom PHP MVC Framework with Template Engine",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\": "core/",
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "MutedBoard Team"
+        }
+    ],
+    "license": "MIT"
+}
