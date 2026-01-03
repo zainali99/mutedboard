@@ -205,6 +205,62 @@ class Ajax extends Controller
     }
 
     /**
+     * Handle component AJAX requests
+     */
+    public function componentAction()
+    {
+        try {
+            // Get JSON input
+            $input = json_decode(file_get_contents('php://input'), true);
+            
+            if (!$input) {
+                $this->jsonResponse([
+                    'success' => false,
+                    'error' => 'Invalid JSON input'
+                ], 400);
+            }
+
+            $componentName = $input['component_name'] ?? null;
+            $componentId = $input['component_id'] ?? null;
+            $method = $input['method'] ?? null;
+            $params = $input['params'] ?? [];
+            $props = $input['props'] ?? [];
+
+            if (!$componentName || !$method) {
+                $this->jsonResponse([
+                    'success' => false,
+                    'error' => 'Component name and method are required'
+                ], 400);
+            }
+
+            // Build component class name
+            $componentClass = "App\\Components\\{$componentName}";
+
+            // Check if component class exists
+            if (!class_exists($componentClass)) {
+                $this->jsonResponse([
+                    'success' => false,
+                    'error' => "Component not found: {$componentName}"
+                ], 404);
+            }
+
+            // Create component instance
+            $component = new $componentClass($props, $componentId);
+
+            // Call the method
+            $result = $component->handleAjax($method, $params);
+
+            $this->jsonResponse($result);
+
+        } catch (\Exception $e) {
+            $this->jsonResponse([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Send JSON response
      */
     private function jsonResponse($data, $statusCode = 200)

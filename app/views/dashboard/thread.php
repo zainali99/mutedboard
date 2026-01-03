@@ -269,3 +269,14 @@
     }
 }
 </style>
+
+<!-- Comments Component -->
+<?php
+use App\Components\CommentsBox;
+
+$commentsBox = new CommentsBox([
+    'thread_id' => $thread['id']
+]);
+
+echo $commentsBox->render();
+?>
