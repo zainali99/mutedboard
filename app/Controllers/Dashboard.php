@@ -13,8 +13,10 @@ class Dashboard extends Controller
     /**
      * Before filter - require authentication
      */
-    public function __construct()
+    public function __construct($route_params = [])
     {
+        parent::__construct($route_params);
+        
         // Check if user is logged in
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
@@ -118,6 +120,10 @@ class Dashboard extends Controller
     {
         $id = $this->route_params['id'] ?? null;
         
+        // log the id for debugging
+        error_log("Thread ID: " . $id);
+
+
         if (!$id) {
             header('Location: /dashboard');
             exit;
