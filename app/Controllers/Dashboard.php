@@ -139,12 +139,15 @@ class Dashboard extends Controller
         // Increment view count
         Thread::incrementViews($id);
 
+        $thread['content'] = View::markdown($thread['content']);
+
+
         $data = [
             'title' => $thread['title'],
             'thread' => $thread
         ];
 
-        View::renderWithTemplate('dashboard/thread', 'default', $data);
+        View::renderWithTemplate('dashboard/thread', 'default', $data, true);
     }
 
     /**

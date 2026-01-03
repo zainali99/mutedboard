@@ -37,7 +37,7 @@
         </header>
 
         <div class="thread-content">
-            <?= nl2br(htmlspecialchars($thread['content'])) ?>
+            <?= $thread['content'] ?>
         </div>
 
         <?php if ($thread['updated_at'] != $thread['created_at']): ?>
