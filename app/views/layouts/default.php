@@ -17,6 +17,12 @@
                     <ul>
                         <li><a href="/">Home</a></li>
                         <li><a href="/about">About</a></li>
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <li><a href="/dashboard">Dashboard</a></li>
+                            <li><a href="/logout">Logout (<?= htmlspecialchars($_SESSION['username']) ?>)</a></li>
+                        <?php else: ?>
+                            <li><a href="/login">Login</a></li>
+                        <?php endif; ?>
                     </ul>
                 </nav>
             </div>
@@ -39,5 +45,6 @@
 
 
     <script src="/js/app.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 </html>

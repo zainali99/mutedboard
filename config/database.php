@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'host' => 'localhost',
+    'host' => '127.0.0.1',
     'dbname' => 'mutedboard',
     'username' => 'user',
     'password' => 'password',

@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use Core\Controller;
 use Core\View;
+use App\Models\Thread;
+use App\Models\Group;
 
 class Home extends Controller
 {
@@ -13,19 +15,13 @@ class Home extends Controller
     public function indexAction()
     {
         $data = [
-            'title' => 'Welcome to MutedBoard',
-            'framework' => 'MutedBoard MVC Framework',
-            'version' => '1.0.0',
-            'features' => [
-                'Custom Router',
-                'MVC Architecture',
-                'Template Engine',
-                'Database Support',
-                'Error Handling'
-            ]
+            'title' => 'MutedBoard - Community Discussions',
+            'threads' => Thread::getRecentThreads(12),
+            'groups' => Group::getAll(),
+            'total_threads' => count(Thread::getAll())
         ];
 
-        View::renderWithTemplate('home/index.php', 'default', $data);
+        View::renderWithTemplate('home/index', 'default', $data);
     }
 
     /**
@@ -38,6 +34,6 @@ class Home extends Controller
             'description' => 'A lightweight custom PHP MVC framework'
         ];
 
-        View::renderWithTemplate('home/about.php', 'default', $data);
+        View::renderWithTemplate('home/about', 'default', $data);
     }
 }

@@ -27,6 +27,11 @@ spl_autoload_register(function ($class) {
 // Set timezone
 date_default_timezone_set('UTC');
 
+// Start session
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Get application instance
 $app = \Core\App::getInstance();
 

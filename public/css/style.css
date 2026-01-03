@@ -88,3 +88,22 @@ footer p {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+
+
+nav ul {
+    display: flex;
+    gap: 1rem;
+}
+
+nav li a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+nav li a:hover {
+    color: var(--primary-color);
+    background-color: var(--light-color);
+}
+
