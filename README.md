@@ -1,4 +1,21 @@
-# MutedBoard MVC Framework
+# MutedBoard - open source forum - blog software
+Status: Early learning project. Not production-ready; expect frequent breaking changes.
+TODO for stable release 1.0:
+- [x] installer wizard 60% (need refactor)
+- [ ] ORM / query layer
+- [ ] basic Migrations 
+- [x] component stable sytem (80%
+- [ ]  frontend
+  - [ ] index 
+  - [ ] threads views
+  - [ ] threds management
+  - [ ] comments management
+  - [ ] sitemap generator
+- [ ] basic importer from other forum software like mybb, phpbb etc
+- [ ] stats
+- [ ] cache system initially file based, later add support for redis etc
+- [ ] plugins/addons system
+      
 
 A lightweight custom PHP MVC framework with template engine support.
 
