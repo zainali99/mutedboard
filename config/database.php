@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'host' => '127.0.0.1',
+    'host' => 'db',
     'dbname' => 'mutedboard',
-    'username' => 'user',
-    'password' => 'password',
+    'username' => 'muteduser',
+    'password' => 'mutedpass',
     'charset' => 'utf8mb4'
 ];

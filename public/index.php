@@ -32,7 +32,24 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Get application instance
+// Check if installation is complete BEFORE initializing anything
+$installedFile = dirname(__DIR__) . '/.installed';
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$isInstallerRoute = (strpos($requestUri, '/install') === 0);
+
+// If not installed and not accessing installer, redirect to installer
+if (!file_exists($installedFile) && !$isInstallerRoute) {
+    header('Location: /install');
+    exit;
+}
+
+// If installed and trying to access installer, redirect to home
+if (file_exists($installedFile) && $isInstallerRoute) {
+    header('Location: /');
+    exit;
+}
+
+// Get application instance (safe to initialize now)
 $app = \Core\App::getInstance();
 
 // Load routes

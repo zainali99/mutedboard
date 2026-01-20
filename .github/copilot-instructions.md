@@ -152,3 +152,7 @@ cd public && php -S localhost:8000
 3. **Action suffix required** - `indexAction()` not `index()`
 4. **Static models only** - No `$this` in model methods, use `static::getDB()`
 5. **Manual autoloader** - Converts namespace case: `Core\App` → `core/App.php` (lowercase dir)
+
+
+
+# FOR AI AGENTS

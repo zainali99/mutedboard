@@ -11,3 +11,4 @@ Thumbs.db
 .vscode/
 *.cache
 composer.lock
+.*

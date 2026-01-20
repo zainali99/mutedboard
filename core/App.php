@@ -79,7 +79,15 @@ class App
      */
     public function run()
     {
+        // Get URL from REQUEST_URI (nginx doesn't pass it as 'url' parameter)
         $url = $_GET['url'] ?? '';
+        
+        // If no 'url' parameter, parse from REQUEST_URI
+        if (empty($url) && isset($_SERVER['REQUEST_URI'])) {
+            $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            $url = trim($url, '/');
+        }
+        
         $this->router->dispatch($url);
     }
 }

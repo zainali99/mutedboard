@@ -1,0 +1,41 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: mutedboard-php:latest
+    container_name: mutedboard-php
+    working_dir: /var/www/html
+    volumes:
+      - ../:/var/www/html
+    depends_on:
+      - db
+    environment:
+      - TZ=UTC
+
+  nginx:
+    image: nginx:1.25
+    container_name: mutedboard-nginx
+    ports:
+      - "8088:80"    # Host 8088 → Container 80
+    volumes:
+      - ../:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: mutedboard-mysql
+    ports:
+      - "33088:3306" # Host 33088 → Container 3306
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mutedboard
+      MYSQL_USER: muteduser
+      MYSQL_PASSWORD: mutedpass
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
