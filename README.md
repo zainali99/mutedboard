@@ -1,5 +1,7 @@
 # MutedBoard - open source forum - blog software
-Status: Early learning project. Not production-ready; expect frequent breaking changes.
+
+### Status: Alpha version
+## Not production-ready; expect frequent breaking changes.
 TODO for stable release 1.0:
 - [x] installer wizard 60% (need refactor)
 - [ ] ORM / query layer
