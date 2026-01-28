@@ -6,6 +6,11 @@
 
 $router = \Core\App::getInstance()->getRouter();
 
+// Static file routes (must be first to handle assets)
+$router->add('assets/{file:.+}', ['controller' => 'StaticManager', 'action' => 'serve']);
+$router->add('css/{file:.+}', ['controller' => 'StaticManager', 'action' => 'serve']);
+$router->add('js/{file:.+}', ['controller' => 'StaticManager', 'action' => 'serve']);
+
 // Installation routes
 $router->add('install', ['controller' => 'Install', 'action' => 'index']);
 $router->add('install/requirements', ['controller' => 'Install', 'action' => 'requirements']);
@@ -18,6 +23,11 @@ $router->add('install/complete', ['controller' => 'Install', 'action' => 'comple
 $router->add('login', ['controller' => 'Auth', 'action' => 'login']);
 $router->add('auth/authenticate', ['controller' => 'Auth', 'action' => 'authenticate']);
 $router->add('logout', ['controller' => 'Auth', 'action' => 'logout']);
+
+// User profile route
+$router->add('profile', ['controller' => 'Profile', 'action' => 'index']);
+
+
 
 // Dashboard routes
 $router->add('dashboard', ['controller' => 'Dashboard', 'action' => 'index']);
@@ -41,6 +51,3 @@ $router->add('about', ['controller' => 'Home', 'action' => 'about']);
 
 // Standard routes with controller and action
 $router->add('{controller}/{action}');
-
-// Route with parameters
-$router->add('{controller}/{action}/{id:\d+}');
