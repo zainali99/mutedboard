@@ -1,109 +1,183 @@
-/* CSS Reset */
-
-/* add css vars like primary colors */
-:root {
-    --primary-color: #27651A;
-    --primary-hover: #7CB342;
-    --secondary-color: #6c757d;
-    --success-color: #28a745;
-    --danger-color: #dc3545;
-    --warning-color: #ffc107;
-    --info-color: #17a2b8;
-    --light-color: #f8f9fa;
-    --dark-color: #343a40;
-    --text-color: #212529;
-    --border-color: #dee2e6;
-    --bg-color: #ffffff;
-}
-
-
-
-* {
+/* Reset CSS - Eric Meyer's Reset v2.0 (public domain) */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    height: 100%;
-}
-
-body {
-    line-height: 1.9em;
-    font: 12px Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-}
-
-img, picture, video, canvas, svg {
-    display: block;
-    max-width: 100%;
-}
-
-input, button, textarea, select {
+    border: 0;
+    font-size: 100%;
     font: inherit;
+    vertical-align: baseline;
 }
-
-p, h1, h2, h3, h4, h5, h6 {
-    overflow-wrap: break-word;
-    margin: 0.5rem 0;
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display: block;
 }
-
-a {
-    text-decoration: none;
-    color: inherit;
+body {
+    line-height: 1;
 }
-
-ul, ol {
+ol, ul {
     list-style: none;
 }
-
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
 table {
     border-collapse: collapse;
     border-spacing: 0;
 }
 
 
-.container {
-    width: 960px;
-    margin: 0 auto;
-}
-footer {
 
-    text-align: center;
-    margin-top: 20px;
-}
-footer p {
-    color: #6c757d;
-   
+:root {
+    --primary-color: #859F3D;
+    --secondary-color: #31511E;
+    --background-color: #F6FCDF;
+    --text-color: #1A1A19;
+    --font-family: 'Helvetica Neue', Helvetica, Arial, serif;
 }
 
 
-
-.btn {
-    background-color: var(--primary-color);
-    color: #fff;
-    border: none;
-    padding: 4px 8px;
-
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-
-nav ul {
-    display: flex;
-    gap: 1rem;
-}
-
-nav li a {
-    display: block;
-    padding: 0.5rem 1rem;
-    color: var(--text-color);
-    transition: all 0.3s ease;
-}
-
-nav li a:hover {
+a {
     color: var(--primary-color);
-    background-color: var(--light-color);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
 }
 
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    font-family: var(--font-family);
+    color: var(--text-color);
+    padding: 20px;
+
+    /* Single column layout since sidebar is removed */
+    display: block;
+}
+
+.main-content {
+    padding: 10px;
+}
+
+/* Responsive layout for tablets and below */
+@media (max-width: 900px) {
+    .container {
+        padding: 10px;
+    }
+    .main-content {
+        padding: 10px 0;
+    }
+}
+
+
+
+
+/* 2004-style old forum look */
+.sections-list {
+    display: block;
+    margin-top: 24px;
+}
+
+.section {
+    background: #e0e0e0;
+    border: 2px solid #b0b0b0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 24px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.section h2 {
+    font-size: 1.1rem;
+    color: #003366;
+    margin: 0;
+    padding: 8px 12px;
+    background: #c0c0c0;
+    border-bottom: 1px solid #b0b0b0;
+    font-weight: bold;
+    letter-spacing: 0;
+    text-shadow: none;
+}
+
+.forums-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+.forums-list li {
+    padding: 10px 12px;
+    border-bottom: 1px solid #b0b0b0;
+    background: #f8f8f8;
+    display: block;
+    font-size: 0.98rem;
+}
+
+.forums-list li:hover {
+    background: #e0e0e0;
+}
+
+.forums-list li:last-child {
+    border-bottom: none;
+}
+
+.forums-list a {
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: underline;
+    transition: none;
+}
+
+.forums-list a:hover {
+    text-decoration: underline;
+}
+
+.forum-desc {
+    font-size: 0.93rem;
+    color: #555;
+    margin-left: 0;
+    margin-top: 2px;
+    font-style: italic;
+}
+
+.section > p {
+    color: var(--primary-color);
+    font-size: 0.98rem;
+    margin: 8px 12px 0 12px;
+}
+
+/* Responsive: minimal changes for old design */
+@media (max-width: 600px) {
+    .section h2 {
+        font-size: 1rem;
+        padding: 6px 6px;
+    }
+    .forums-list li {
+        font-size: 0.95rem;
+        padding: 8px 6px;
+    }
+    .forum-desc {
+        font-size: 0.9rem;
+    }
+}
