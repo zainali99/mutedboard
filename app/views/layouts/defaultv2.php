@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'MutedBoard Framework' ?></title>
-    <link rel="stylesheet" href="/css/style.css?<?= rand() ?>">
+    <link rel="stylesheet" href="/css/style.css">
     <script src="/js/app.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/components.js"></script>
@@ -15,18 +15,18 @@
 <body>
 
 <div class="container">
-    <header>
-        <a href="/">
-            <img src="/assets/logo-alpha.jpg" alt="MutedBoard Logo" class="logo" height="150">
-            
-        </a>
-    </header>
+    <div class="sidebar">
+        <h1>MutedBoard <?php echo $_version ?></h1>
+    </div>
     <div class="main-content">
         <?= $content ?>
     </div>
 
 
 </div>
+
+
+
 
 
 
