@@ -1,3 +1,5 @@
+![logo](https://raw.githubusercontent.com/zainali99/mutedboard/d3f56243696c71ca8fb819acab1463ef28c44359/public/assets/logo-alpha.jpg)
+
 # MutedBoard - open source forum - blog software
 
 ### Status: Alpha version
