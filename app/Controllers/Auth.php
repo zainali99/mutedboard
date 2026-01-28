@@ -50,18 +50,18 @@ class Auth extends Controller
         $user = User::authenticate($username, $password);
         
         if ($user) {
-            // Login successful
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['role'] = $user['role'];
-            $_SESSION['is_muted'] = $user['is_muted'];
+            // Login successful - convert object to array or access properties
+            $_SESSION['user_id'] = $user->id;
+            $_SESSION['username'] = $user->username;
+            $_SESSION['email'] = $user->email;
+            $_SESSION['role'] = $user->role;
+            $_SESSION['is_muted'] = $user->is_muted;
             
             // Set remember me cookie if checked
             if ($remember) {
                 $token = bin2hex(random_bytes(32));
                 setcookie('remember_token', $token, time() + (86400 * 30), '/'); // 30 days
-                User::saveRememberToken($user['id'], $token);
+                User::saveRememberToken($user->id, $token);
             }
             
             header('Location: /');

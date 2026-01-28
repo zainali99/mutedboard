@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use Core\Controller;
 use Core\View;
+use Core\Model;
 use App\Models\Thread;
 use App\Models\Group;
 use App\Models\User;
@@ -29,11 +30,15 @@ class Dashboard extends Controller
      */
     public function indexAction()
     {
+        $user = User::findById($_SESSION['user_id']);
+        $threads = Thread::getRecentThreads(10);
+        $groups = Group::getAll();
+        
         $data = [
             'title' => 'Dashboard',
-            'user' => User::findById($_SESSION['user_id']),
-            'threads' => Thread::getRecentThreads(10),
-            'groups' => Group::getAll()
+            'user' => $user ? $user->toArray() : null,
+            'threads' => $threads, // Already returns arrays from getRecentThreads
+            'groups' => $groups // getAll() now returns arrays
         ];
 
         View::renderWithTemplate('dashboard/index', 'default', $data);
@@ -44,9 +49,11 @@ class Dashboard extends Controller
      */
     public function createThreadAction()
     {
+        $groups = Group::getAll();
+        
         $data = [
             'title' => 'Create New Thread',
-            'groups' => Group::getAll()
+            'groups' => $groups // getAll() now returns arrays
         ];
 
         View::renderWithTemplate('dashboard/create-thread', 'default', $data);
@@ -84,14 +91,14 @@ class Dashboard extends Controller
         }
 
         // Check if group exists
-        $group = Group::findById($group_id);
+        $group = Group::find($group_id);
         if (!$group) {
             $errors[] = 'Selected group does not exist';
         }
 
         if (empty($errors)) {
             try {
-                $threadId = Thread::create([
+                $thread = Thread::create([
                     'group_id' => $group_id,
                     'user_id' => $_SESSION['user_id'],
                     'title' => $title,
@@ -99,7 +106,7 @@ class Dashboard extends Controller
                 ]);
 
                 $_SESSION['success'] = 'Thread created successfully!';
-                header('Location: /dashboard/thread/' . $threadId);
+                header('Location: /dashboard/thread/' . $thread->id);
                 exit;
             } catch (\Exception $e) {
                 $errors[] = 'Failed to create thread: ' . $e->getMessage();

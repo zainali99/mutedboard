@@ -292,6 +292,29 @@ class Install extends Controller
                     $errors[] = 'Group members table: ' . $e->getMessage();
                 }
 
+                // Create comments table
+                try {
+                    $pdo->exec("
+                        CREATE TABLE IF NOT EXISTS `comments` (
+                            `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                            `thread_id` INT UNSIGNED NOT NULL,
+                            `user_id` INT UNSIGNED NOT NULL,
+                            `content` TEXT NOT NULL,
+                            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                            `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                            FOREIGN KEY (`thread_id`) REFERENCES `threads`(`id`) ON DELETE CASCADE,
+                            FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+                            INDEX `thread_id` (`thread_id`),
+                            INDEX `user_id` (`user_id`),
+                            INDEX `idx_comments_created_at` (`created_at`),
+                            INDEX `idx_comments_thread_created` (`thread_id`, `created_at`)
+                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+                    ");
+                    $success[] = 'Comments table created successfully';
+                } catch (PDOException $e) {
+                    $errors[] = 'Comments table: ' . $e->getMessage();
+                }
+
                 // Create default admin user and group
                 try {
                     // Check if admin user already exists
