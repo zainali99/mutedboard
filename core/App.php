@@ -19,6 +19,8 @@ class App
      */
     private $config = [];
 
+    public $version;
+
     /**
      * Private constructor to prevent direct instantiation
      */
@@ -27,6 +29,8 @@ class App
         $this->router = new Router();
         $this->loadConfig();
         $this->setupErrorHandling();
+
+        $this->version = '0.0.1-alpha';
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 namespace Core;
+#namespace App;
 
 class View
 {
@@ -44,6 +45,8 @@ class View
         $layoutFile = dirname(__DIR__) . "/app/views/layouts/$layout.php";
         if (is_readable($layoutFile)) {
             extract(['content' => $content] + $args, EXTR_SKIP);
+            // $_version = $app->version;
+            $_version = App::getInstance()->version;
             require $layoutFile;
 
         } else {
