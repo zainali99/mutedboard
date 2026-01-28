@@ -7,8 +7,11 @@ use PDO;
 
 class User extends Model
 {
+    protected static $fillable = ['username', 'email', 'password', 'role', 'is_muted', 'muted_until'];
+    protected static $guarded = ['id', 'created_at', 'updated_at'];
+
     /**
-     * Get all users
+     * Get all users ordered by creation date (returns arrays for views)
      */
     public static function getAll()
     {
@@ -18,15 +21,11 @@ class User extends Model
     }
     
     /**
-     * Find user by ID
+     * Find user by ID (alias for find())
      */
     public static function findById($id)
     {
-        $db = static::getDB();
-        $stmt = $db->prepare('SELECT * FROM users WHERE id = :id');
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return static::find($id);
     }
     
     /**
@@ -34,11 +33,7 @@ class User extends Model
      */
     public static function findByUsername($username)
     {
-        $db = static::getDB();
-        $stmt = $db->prepare('SELECT * FROM users WHERE username = :username');
-        $stmt->bindValue(':username', $username, PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return static::first(['username' => $username]);
     }
     
     /**
@@ -46,11 +41,7 @@ class User extends Model
      */
     public static function findByEmail($email)
     {
-        $db = static::getDB();
-        $stmt = $db->prepare('SELECT * FROM users WHERE email = :email');
-        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return static::first(['email' => $email]);
     }
     
     /**
@@ -64,8 +55,8 @@ class User extends Model
             // Also try email
             $user = static::findByEmail($username);
         }
-        
-        if ($user && password_verify($password, $user['password'])) {
+
+        if ($user && password_verify($password, $user->password)) {
             return $user;
         }
         
@@ -73,68 +64,33 @@ class User extends Model
     }
     
     /**
-     * Create a new user
+     * Create a new user with hashed password
      */
-    public static function create($data)
+    public static function createUser($data)
     {
-        $db = static::getDB();
-        
-        $stmt = $db->prepare('
-            INSERT INTO users (username, email, password, role)
-            VALUES (:username, :email, :password, :role)
-        ');
-        
-        $stmt->bindValue(':username', $data['username'], PDO::PARAM_STR);
-        $stmt->bindValue(':email', $data['email'], PDO::PARAM_STR);
-        $stmt->bindValue(':password', password_hash($data['password'], PASSWORD_DEFAULT), PDO::PARAM_STR);
-        $stmt->bindValue(':role', $data['role'] ?? 'user', PDO::PARAM_STR);
-        
-        $stmt->execute();
-        
-        return $db->lastInsertId();
-    }
-    
-    /**
-     * Update user
-     */
-    public static function update($id, $data)
-    {
-        $db = static::getDB();
-        
-        $fields = [];
-        $params = ['id' => $id];
-        
-        foreach ($data as $key => $value) {
-            if (in_array($key, ['username', 'email', 'role', 'is_muted', 'muted_until'])) {
-                $fields[] = "$key = :$key";
-                $params[$key] = $value;
-            }
-        }
-        
+        // Hash password before creating
         if (isset($data['password'])) {
-            $fields[] = "password = :password";
-            $params['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         }
-        
-        if (empty($fields)) {
-            return false;
+        if (!isset($data['role'])) {
+            $data['role'] = 'user';
         }
-        
-        $sql = 'UPDATE users SET ' . implode(', ', $fields) . ' WHERE id = :id';
-        $stmt = $db->prepare($sql);
-        
-        return $stmt->execute($params);
+        return static::create($data);
     }
     
     /**
-     * Delete user
+     * Update user with optional password hashing
      */
-    public static function delete($id)
+    public function updateUser($data)
     {
-        $db = static::getDB();
-        $stmt = $db->prepare('DELETE FROM users WHERE id = :id');
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
+        // Hash password if being updated
+        if (isset($data['password'])) {
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+        
+        // Fill and save
+        $this->fill($data);
+        return $this->save();
     }
     
     /**

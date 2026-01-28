@@ -7,6 +7,7 @@ use PDO;
 
 class Thread extends Model
 {
+    protected static $fillable = ['group_id', 'user_id', 'title', 'content', 'is_pinned', 'is_locked'];
     /**
      * Get all threads
      */
@@ -49,7 +50,7 @@ class Thread extends Model
     }
 
     /**
-     * Find thread by ID
+     * Find thread by ID with joined data
      */
     public static function findById($id)
     {
@@ -69,27 +70,6 @@ class Thread extends Model
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Create a new thread
-     */
-    public static function create($data)
-    {
-        $db = static::getDB();
-        $stmt = $db->prepare('
-            INSERT INTO threads (group_id, user_id, title, content)
-            VALUES (:group_id, :user_id, :title, :content)
-        ');
-        
-        $stmt->bindValue(':group_id', $data['group_id'], PDO::PARAM_INT);
-        $stmt->bindValue(':user_id', $data['user_id'], PDO::PARAM_INT);
-        $stmt->bindValue(':title', $data['title'], PDO::PARAM_STR);
-        $stmt->bindValue(':content', $data['content'], PDO::PARAM_STR);
-        
-        $stmt->execute();
-        
-        return $db->lastInsertId();
     }
 
     /**
@@ -152,63 +132,47 @@ class Thread extends Model
     }
 
     /**
-     * Update thread
+     * Toggle pin status (static version for backward compatibility)
      */
-    public static function update($id, $data)
+    public static function togglePinById($id)
     {
-        $db = static::getDB();
-        $stmt = $db->prepare('
-            UPDATE threads 
-            SET title = :title, content = :content
-            WHERE id = :id
-        ');
-        
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $stmt->bindValue(':title', $data['title'], PDO::PARAM_STR);
-        $stmt->bindValue(':content', $data['content'], PDO::PARAM_STR);
-        
-        return $stmt->execute();
+        $thread = static::find($id);
+        if (!$thread) {
+            return false;
+        }
+        $thread->is_pinned = !$thread->is_pinned;
+        return $thread->save();
     }
 
     /**
-     * Delete thread
+     * Toggle lock status (static version for backward compatibility)
      */
-    public static function delete($id)
+    public static function toggleLockById($id)
     {
-        $db = static::getDB();
-        $stmt = $db->prepare('DELETE FROM threads WHERE id = :id');
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
+        $thread = static::find($id);
+        if (!$thread) {
+            return false;
+        }
+        $thread->is_locked = !$thread->is_locked;
+        return $thread->save();
     }
 
     /**
-     * Toggle pin status
+     * Toggle pin status (instance method)
      */
-    public static function togglePin($id)
+    public function togglePin()
     {
-        $db = static::getDB();
-        $stmt = $db->prepare('
-            UPDATE threads 
-            SET is_pinned = NOT is_pinned 
-            WHERE id = :id
-        ');
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
+        $this->is_pinned = !$this->is_pinned;
+        return $this->save();
     }
 
     /**
-     * Toggle lock status
+     * Toggle lock status (instance method)
      */
-    public static function toggleLock($id)
+    public function toggleLock()
     {
-        $db = static::getDB();
-        $stmt = $db->prepare('
-            UPDATE threads 
-            SET is_locked = NOT is_locked 
-            WHERE id = :id
-        ');
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
+        $this->is_locked = !$this->is_locked;
+        return $this->save();
     }
 
     /**

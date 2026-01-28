@@ -7,6 +7,7 @@ use PDO;
 
 class Comment extends Model
 {
+    protected static $fillable = ['thread_id', 'user_id', 'content'];
     /**
      * Get comments for a thread
      * 
@@ -37,7 +38,7 @@ class Comment extends Model
     }
 
     /**
-     * Get comment by ID
+     * Get comment by ID with author info
      * 
      * @param int $id Comment ID
      * @return array|false
@@ -60,64 +61,31 @@ class Comment extends Model
     }
 
     /**
-     * Create a new comment
+     * Create a new comment with timestamp
      * 
      * @param array $data Comment data
-     * @return int|false Comment ID or false on failure
+     * @return Comment|false Comment instance or false on failure
      */
-    public static function create($data)
+    public static function createComment($data)
     {
-        $db = static::getDB();
-        $stmt = $db->prepare('
-            INSERT INTO comments (thread_id, user_id, content, created_at)
-            VALUES (:thread_id, :user_id, :content, NOW())
-        ');
-        
-        $stmt->bindValue(':thread_id', $data['thread_id'], PDO::PARAM_INT);
-        $stmt->bindValue(':user_id', $data['user_id'], PDO::PARAM_INT);
-        $stmt->bindValue(':content', $data['content'], PDO::PARAM_STR);
-        
-        if ($stmt->execute()) {
-            return $db->lastInsertId();
-        }
-        
-        return false;
+        return static::create($data);
     }
 
     /**
-     * Update a comment
+     * Update comment content
      * 
      * @param int $id Comment ID
      * @param string $content New content
      * @return bool
      */
-    public static function update($id, $content)
+    public static function updateContent($id, $content)
     {
-        $db = static::getDB();
-        $stmt = $db->prepare('
-            UPDATE comments 
-            SET content = :content, updated_at = NOW()
-            WHERE id = :id
-        ');
-        
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $stmt->bindValue(':content', $content, PDO::PARAM_STR);
-        
-        return $stmt->execute();
-    }
-
-    /**
-     * Delete a comment
-     * 
-     * @param int $id Comment ID
-     * @return bool
-     */
-    public static function delete($id)
-    {
-        $db = static::getDB();
-        $stmt = $db->prepare('DELETE FROM comments WHERE id = :id');
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
+        $comment = static::find($id);
+        if (!$comment) {
+            return false;
+        }
+        $comment->content = $content;
+        return $comment->save();
     }
 
     /**
