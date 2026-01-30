@@ -51,11 +51,13 @@ table {
     --background-color: #F6FCDF;
     --text-color: #1A1A19;
     --font-family: 'Helvetica Neue', Helvetica, Arial, serif;
+    --link-color: #3B5998;
+
 }
 
 
 a {
-    color: var(--primary-color);
+    color: var(--link-color);
     text-decoration: none;
 }
 a:hover {
@@ -98,7 +100,7 @@ a:hover {
 }
 
 .section {
-    background: #e0e0e0;
+    background: var(--background-color);
     border: 2px solid #b0b0b0;
     border-radius: 0;
     box-shadow: none;
@@ -109,10 +111,10 @@ a:hover {
 
 .section h2 {
     font-size: 1.1rem;
-    color: #003366;
+    color:#fff;
     margin: 0;
     padding: 8px 12px;
-    background: #c0c0c0;
+    background:#3b5998;
     border-bottom: 1px solid #b0b0b0;
     font-weight: bold;
     letter-spacing: 0;

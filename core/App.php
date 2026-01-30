@@ -29,7 +29,6 @@ class App
         $this->router = new Router();
         $this->loadConfig();
         $this->setupErrorHandling();
-
         $this->version = '0.0.1-alpha';
     }
 
@@ -76,6 +75,14 @@ class App
     public function getConfig($key, $default = null)
     {
         return $this->config[$key] ?? $default;
+    }
+
+
+    public static function beautyPrint($msg) {
+        echo "<pre>";
+        print_r($msg);
+        echo "</pre>";
+        
     }
 
     /**

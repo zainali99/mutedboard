@@ -49,5 +49,11 @@ $router->add('', ['controller' => 'Home', 'action' => 'index']);
 // About page
 $router->add('about', ['controller' => 'Home', 'action' => 'about']);
 
-// Standard routes with controller and action
-$router->add('{controller}/{action}');
+
+
+
+$router->add('api/v1/ping', ['controller' => 'API', 'action' => 'ping']);
+
+$router->add('api/v1/users', ['controller' => 'API', 'action' => 'usersWithFilters']);
+
+

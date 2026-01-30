@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Core {
 #namespace App;
 
 class View
@@ -10,7 +10,7 @@ class View
      */
     public static function render($view, $args = [])
     {
-        extract($args, EXTR_SKIP);
+        extract(self::prepareViewVars($args), EXTR_SKIP);
 
         $file = dirname(__DIR__) . "/app/views/$view.php";
 
@@ -41,12 +41,11 @@ class View
      */
     public static function renderWithTemplate($view, $layout = 'default', $args = [])
     {
-        $content = self::getViewContent($view, $args);
+        $vars = self::prepareViewVars($args);
+        $content = self::getViewContent($view, $vars);
         $layoutFile = dirname(__DIR__) . "/app/views/layouts/$layout.php";
         if (is_readable($layoutFile)) {
-            extract(['content' => $content] + $args, EXTR_SKIP);
-            // $_version = $app->version;
-            $_version = App::getInstance()->version;
+            extract(['content' => $content] + $vars, EXTR_SKIP);
             require $layoutFile;
 
         } else {
@@ -121,23 +120,50 @@ class View
 
            return $text;
         }
-    
 
+    /**
+     * Prepare view variables with common globals
+     */
+    protected static function prepareViewVars($args = [])
+    {
+        return [
+            'currentLanguage' => self::getCurrentLanguage()
+        ] + $args;
+    }
 
+    /**
+     * Get current language
+     */
+    public static function getCurrentLanguage()
+    {
+        return App::getInstance()->getRouter()->getLanguage();
+    }
 
-
-
-
-
-
-
+    /**
+     * Get translated string
+     */
+    public static function translate($key, $default = null)
+    {
+        $lang = self::getCurrentLanguage();
+        $langFile = dirname(__DIR__) . "/app/i18n/{$lang}/{$lang}.php";
+        
+        if (file_exists($langFile)) {
+            static $translations = [];
+            if (!isset($translations[$lang])) {
+                $translations[$lang] = require $langFile;
+            }
+            return $translations[$lang][$key] ?? $default ?? $key;
+        }
+        
+        return $default ?? $key;
+    }
 
     /**
      * Get view content as string
      */
     protected static function getViewContent($view, $args = [])
     {
-        extract($args, EXTR_SKIP);
+        extract(self::prepareViewVars($args), EXTR_SKIP);
         
         $file = dirname(__DIR__) . "/app/views/$view.php";
 
@@ -147,6 +173,19 @@ class View
             return ob_get_clean();
         } else {
             throw new \Exception("$file not found");
+        }
+    }
+}
+
+} // End of Core namespace
+
+namespace {
+    /**
+     * Helper function for translations - shorthand for View::translate()
+     */
+    if (!function_exists('t')) {
+        function t($key, $default = null) {
+            return \Core\View::translate($key, $default);
         }
     }
 }

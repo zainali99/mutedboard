@@ -83,6 +83,25 @@ if (!isset($sections)) {
     ];
 }
 ?>
+
+
+<div class="header-menu">
+    <p>
+        <?= t('current_lang_label') ?><br>
+        <?= t('welcome') ?><br>
+        <?= t('login') ?><br>
+        <?= t('posts') ?><br>
+    </p>
+</div>
+
+<a href="/en" style="margin-left: 16px;">English</a>
+<a href="/it" style="margin-left: 8px;">Italiano</a>
+<a href="/dashboard" style="margin-left: 8px;">Dashboard</a>
+
+</div>
+
+
+
 <div class="sections-list">
     <?php if (!empty($sections)): ?>
         <?php foreach ($sections as $idx => $section): ?>

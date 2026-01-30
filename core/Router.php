@@ -2,10 +2,17 @@
 
 namespace Core;
 
+use Core\App; 
+
 class Router
 {
     protected $routes = [];
     protected $params = [];
+
+    protected $currentLanguage = "en";
+
+
+    protected $supportedLanguages = ['en', 'it'];
 
     /**
      * Add a route to the routing table
@@ -29,19 +36,76 @@ class Router
         return $this->routes;
     }
 
+    public function setLanguage($lang) {
+        if (in_array($lang, $this->supportedLanguages)) {
+            $this->currentLanguage = $lang;
+            $_SESSION['lang'] = $lang;
+        }
+    }
+
+    public function getLanguage() {
+        if (isset($_SESSION['lang']) && in_array($_SESSION['lang'], $this->supportedLanguages)) {
+            $this->currentLanguage = $_SESSION['lang'];
+        }
+        return $this->currentLanguage;
+    }
+    private function removeLangFromRoute($url) {
+        $parts = explode('/', $url);
+        //App::beautyPrint($parts);
+        if (count($parts) > 1 && in_array($parts[0], $this->supportedLanguages)) {
+            $lang = $parts[0];
+            $this->setLanguage($lang);
+            array_splice($parts, 0, 1); // Remove the language part
+            $url = implode('/', $parts);
+        }
+        else if (in_array($url, $this->supportedLanguages)) {
+            $lang = $url;
+            $this->setLanguage($lang);
+            $url = '';
+        }
+        return $url;
+    }
+
+
+    private function applyLangToRoute($url) {
+        $lang = $this->getLanguage();
+        //App::beautyPrint($_SESSION);
+        //App::beautyPrint($lang);
+        //exit(0);
+
+        if ($lang) {
+            $url = "/{$lang}/{$url}";
+            // Redirect if the URL does not start with the language
+            if (strpos($_SERVER['REQUEST_URI'], "/{$lang}") !== 0) {
+            header('HTTP/1.1 301 Moved Permanently');
+            header("Location: {$url}");
+            exit;
+            }
+        }
+        return $url;
+    }
+
     /**
      * Match the route to the routes in the routing table
      */
     public function match($url)
     {
-        foreach ($this->routes as $route => $params) {
+
+        $url = $this->removeLangFromRoute($url);
+
+        // App::beautyPrint($url);
+        // exit(0);
+
+        foreach ($this->routes as $route => $params) {            
             if (preg_match($route, $url, $matches)) {
                 foreach ($matches as $key => $match) {
-                    if (is_string($key)) {
+                    if (\is_string($key)) {
                         $params[$key] = $match;
                     }
                 }
                 $this->params = $params;
+        
+                $this->applyLangToRoute($url);
                 return true;
             }
         }
@@ -65,6 +129,7 @@ class Router
 
         if ($this->match($url)) {
             $controller = $this->params['controller'];
+
             $controller = $this->convertToStudlyCaps($controller);
             $controller = $this->getNamespace() . $controller;
 
@@ -83,7 +148,9 @@ class Router
                 throw new \Exception("Controller class $controller not found");
             }
         } else {
-            throw new \Exception('No route matched.', 404);
+            http_response_code(404);
+            require dirname(__DIR__) . '/app/views/404.html';
+            exit;
         }
     }
 
