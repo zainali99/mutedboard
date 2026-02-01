@@ -5,6 +5,7 @@
 ### Status: Alpha version
 ## Not production-ready; expect frequent breaking changes.
 TODO for stable release 1.0:
+- [x] basic i18n and translate utils
 - [x] installer wizard 60% (need refactor)
 - [ ] ORM / query layer
 - [ ] basic Migrations 
